@@ -1,0 +1,11 @@
+{
+  "id": "28",
+  "title": "[翻译] M3U 和M3U8 详解_from wiki",
+  "keywords": [
+    "m3u8"
+  ],
+  "content": "\n文件格式\nm3u文件是用来描述一个或多个媒体文件地址的纯文本文件，通常以 M3U 或 m3u 作为扩展名。\n\nm3u文件里描述的最小单位（元素/行/记录），可以是一下三者之一：\n\n```javascript\n1.一个文件的绝对路径\n2.相对于m3u文件的相对路径\n3.一个网络url\n```\n\n以#好开头的，是m3u的注释，而一些m3u扩展指令也是由#号开头\n\nm3u的一个常见用途是作为一个指向网络中一个流媒体的播放列表，比如在线视频、广播等等。\n\n你可以直接用文本编辑器编写一个m3u文件，但需要保存为 window-1252格式（ASCII的一个扩展集）。\n\nM3U指令的扩展\n\n```javascript\n#EXTM3U    文件头，必须出现在第一行            如：略\n#EXTINF\t   引导信息，包含播放时间（时长）和标题     如：#EXTINF:191,Artist Name - Track Title\n```\n\nM3U8\n所谓的M3U8就是用unicode编写的M3U文件，这最初是用在IOS设备上播放http实时流的基础格式。\n\n例子1：\n这是一个在window系统下的 扩展m3u 文件。其中包含sample.mp3和Example.ogg两个媒体文件。\n123和321是文件时长，单位是秒，但如果这里用-1的话，表示的是一个媒体流，而不是真正的时长。\n接下来的是要显示的标题，用来描述下一行的这个媒体文件。\n\n```javascript\n#EXTM3U\n\n#EXTINF:123, Sample artist - Sample title\nC:\\Documents and Settings\\I\\My Music\\Sample.mp3\n\n#EXTINF:321,Example Artist - Example title\nC:\\Documents and Settings\\I\\My Music\\Greatest Hits\\Example.ogg\n```\n\n例子2：\n下面这个例子是用m3u文件来指向一个给定的目录(比如U盘或者光驱)。\n这个m3u文件只能包含一行语句：就是指向的这个路径。\n这样，播放器就能自动播放这个目录下的全部文件。\n\n```javascript\nC:\\Music\n```\n\n例子3\n这个例子当中我们使用了相对路径。m3u文件和媒体文件放在同一个目录下，\n而当你要把文件转移的时候，必须保持m3u文件和媒体文件的目录结构不改变。\n这种方式比较弹性，不必要求媒体文件永远放在一个固定的地方。\n还是刚才的文件，我们修改一下：\n\n```javascript\n#EXTM3U\n\n#EXTINF:123, Sample artist - Sample title\nSample.mp3\n\n#EXTINF:321,Example Artist - Example title\nGreatest Hits\\Example.ogg\n```\n\n例子4：\n下面是一个全面的例子\n\n```javascript\nAlternative\\Band - Song.mp3\nClassical\\Other Band - New Song.mp3\nStuff.mp3\nD:\\More Music\\Foo.mp3\n..\\Other Music\\Bar.mp3\nhttp://emp.cx:8000/Listen.pls\nhttp://www.example.com/~user/Mine.mp3\n```\n\n备注：\n· “Alternative”和“Classical”是m3u文件所在位置的子目录（一看就明白吧）\n· “Song”和“New Song”两个文件都在m3u文件所在位置的子目录里（外国人都那么细致）\n` “Stuff”这个文件就在m3u文件当前目录\n· \"Foo\"这个文件就在一个绝对路径，跟当前目录无关。\n· “Bar”这个文件，在当前目录的上一层的子目录下（拗口。。）\n· “Listen”这个是个Shoutcast在线地址（貌似是国外一个出名的在线播放产品？）\n· “Mine”是个纯粹的在线音频地址\n\n例子5：\nm3u同样支持嵌套引用\n\n```javascript\nAnotherPlayList.m3u\n```\n\n例子6：\n（一些MP3标签的写法，暂不翻译）\n\n软件：\n支持m3u的播放器有很多，此处不表。\n",
+  "createdAt": 1409795640,
+  "modified": 1429899910,
+  "desc": "文件格式 m3u文件是用来描述一个或多个媒体文件地址的纯文本文件，通常以 M3U 或 m3u 作为扩展名。m3u的一个常见用途是作为一个指向网络中一个流媒体的播放列表，比如在线视频、广播等等。"
+}

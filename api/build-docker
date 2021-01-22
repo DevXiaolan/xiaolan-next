@@ -1,0 +1,9 @@
+npm run build
+
+cp -R src/libs/json dist/libs/ 
+
+docker build -t xiaolanhome_api:210122 .
+
+docker tag xiaolanhome_api:210122 registry.cn-shenzhen.aliyuncs.com/lan_jane/xiaolanhome_api:210122
+
+docker push registry.cn-shenzhen.aliyuncs.com/lan_jane/xiaolanhome_api:210122

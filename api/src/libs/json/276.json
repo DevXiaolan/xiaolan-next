@@ -1,0 +1,11 @@
+{
+  "id": "276",
+  "title": "今天我们来说说［函数依赖的参变量对调用方全部可见］",
+  "keywords": [
+    "函数"
+  ],
+  "content": "### 函数依赖的参变量对调用方全部可见\n这句话什么意思？\n\n就是，当你需要写一个函数时，你应该遵守一个原则，让调用函数的主体，知晓影响函数执行结果的一切参变量。\n\n比如 ，我输入 “面粉”，“糖”，“鸡蛋”，你应该返回甜味的馒头，你不能偷偷往里加盐，而又不让我知道也不让我阻止。\n\n而实际上，很多时候我们写的代码，都没有很好遵守这个原则，\n\n```javascript\nfunction renderHtml($veiw){\n    $style = '2016newyear';\n    return $this-&gt;template($view,$style)\n}\n```\n\n看吧，强行使用了2016newyear风格，调用方完全无可奈何。\n\n```javascript\nfunction renderHtml($veiw,$style='default'){\n    return $this-&gt;template($view,$style)\n}\n```\n\n这样就好多了。\n\n不要小看这些原则，这是高质量代码的一小步。\n",
+  "createdAt": 1453714529,
+  "modified": 1453714529,
+  "desc": "函数依赖的参变量对调用方全部可见，这句话什么意思？就是，当你需要写一个函数时，你应该遵守一个原则，让调用函数的主体，知晓影响函数执行结果的一切参变量。"
+}

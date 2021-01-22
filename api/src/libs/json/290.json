@@ -1,0 +1,13 @@
+{
+  "id": "290",
+  "title": "快速体验redis地理信息API",
+  "keywords": [
+    "redis",
+    "lbs",
+    "geo"
+  ],
+  "content": "\n近日 redis 发布了3.2版本，期待已久的GEO Api终于能够使用，我们第一时间体验一下\n### GEOADD\n\n> \nGEOADD key longitude latitude member [longitude latitude member ...]\n\n例子：\n\n```javascript\nGEOADD user_location 103.1123 30.676 \"Tom\"\n参数讲解：\nGEOADD 添加地理信息\nuser_location 定义一个地理信息点的集合，叫做 用户位置\n103.1123  经度，X坐标\n30.676  纬度，Y坐标\n\"Tom\"   名字，用户名之类\n（后3个参数作为一组信息，可以无线重复多个，一次录入多个点）\n比如：\nGEOADD user_location 103.1123 30.676 \"Tom\" 111.27 44.566 \"Jack\"\n```\n\n> \n注意的是，很多时候我们看到的经纬度单位 **度｜分｜秒** ，GEOADD里要转换成小数。\n同时，有效的经度从-180度到180度，有效的纬度从-85.05112878度到85.05112878度。\n所以，地球两极是处理不了的。\n\n具体原因是，GEO将球形转换成平面的XY矩形，极点无法转化。\n（参考 EPSG:900913 / EPSG:3785 / OSGEO:41001 ）\n\n### GEODIST\n\n> \nGEODIST key member1 member2 [unit]\n\n例子：\n\n```javascript\nGEODIST user_location Jack Tom km\n参数讲解：\nGEODIST 计算两点距离\nuser_location 地理信息集合，目前只能计算同一个集合下的点\nJack Tom 两个点的名字\nkm 单位，m 表示米，km 表示千米，mi 表示英里，ft 表示英尺。\n返回：\n\"1701.7446\"    表示两点距离1701.74 km\n```\n\n> \nGEODIST 命令在计算距离时会假设地球为完美的球形， 在极限情况下， 这一假设最大会造成 0.5% 的误差。\n\n### 附近的人 GEORADIUS ， GEORADIUSBYMEMBER\n&gt;GEORADIUS key longitude latitude radius unit [WITHCOORD] [WITHDIST] [WITHHASH] [COUNT count] [ASC|DESC]\n\n```javascript\n例子：\nGEORADIUS user_location 100 35 1000 km \n表示从指定集合里，查找 （100，35）这个点附近1000km的点，\n返回： Tom ，说明Jack不在1000km内。\n\n参数说明：\nuser_location  指定的地理信息集合\n100 35 \t经纬度\n1000\t距离\nkm\t\t距离单位，m|km|ft|mi \n以下可选开关：\nWITHCOORD\t返回坐标\nWITHDIST\t返回距离\nWITHHASH\t返回GeoHash\nCOUNT count\t表示只返回多少个结果，如：COUNT 10 \nASC\t\t按距离正序\nDESC\t按距离倒序\n\n所以，假如是要获取附近1公里的人，就是\nGEORADIUS user_location {X} {Y} 1 km WITHDIST ASC\n```\n\n> \n值得注意的是，使用 WITHDIST 来返回距离时，使用的单位和radius的单位是一致的，所以，尽量使用小单位，给自己更多的操作空间。\n\n",
+  "createdAt": 1462863851,
+  "modified": 1462863851,
+  "desc": "近日 redis 发布了3.2版本，期待已久的GEO Api终于能够使用，我们第一时间体验一下"
+}

@@ -1,0 +1,12 @@
+{
+  "id": "234",
+  "title": "node 对中文字符MD5加密的问题",
+  "keywords": [
+    "node",
+    "md5"
+  ],
+  "content": "\n```javascript\n//错误做法，不支持中文\nfunction(data){\n    var md5sum = crypto.createHash('md5');\n    md5sum.update(data);\n    data = md5sum.digest('hex');\n    return data;\n};\n\n//正确做法，支持中文\nfunction(data){\n    var Buffer = require(\"buffer\").Buffer;\n    var buf = new Buffer(data);\n    var str = buf.toString(\"binary\");\n    var md5sum = crypto.createHash('md5');\n    md5sum.update(str);\n    data = md5sum.digest('hex');\n    return data;\n};\n```\n",
+  "createdAt": 1425473580,
+  "modified": 1429897776,
+  "desc": ""
+}

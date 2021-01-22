@@ -1,0 +1,10 @@
+{
+  "http": {
+    "host": "0.0.0.0",
+    "port": 3001,
+    "cors": true,
+    "verbose": true,
+    "prefix": "",
+    "strictStatus": false
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "id": 325,
+  "title": "2020年“寒假”学习总结",
+  "keywords": [
+    "hooks",
+    "react"
+  ],
+  "content": "<blockquote><p>咱们就不蹭热度，不谈疫情，这里只谈技术。 ———— 鲁迅</p></blockquote>\n\n<h4>寒假学习总结</h4>\n\n<p>突然多了一个“寒假”，爱学习的我还是安排了一些目标的，总览如下：</p>\n\n<ul><li><p>React </p><ul><li>使用React开发 + Antd 重新开发了这个博客  ✅</li><li>Class Component 开发这个博客 ✅</li><li>引入 Redux 作为本站状态管理，替代之前的 callback props ✅</li><li>学习 Function Component 并重构了上面提到部分简单的组件 ✅</li><li>学习 React Hooks ，并全部重构这个博客的组件 ✅</li><li>参考其他作品，自己封装了一个 hook api 的全局状态管理，移除了 Redux ✅</li></ul></li></ul>\n\n<h4>感受</h4>\n\n<ul><li><p>Class Component</p><p>由于常年研究各种语言的各种开发框架，这阵子再看 <code>Class Component</code>的设计，其实是相当的“正”的，非常学院派的设计技巧。</p><p>功能上非常完整且强大，即使是因为编程范式也好，一些开发中的痛点也罢，在官方大行其道推荐 <code>FC</code>的当下，<code>Class Component</code> 思想还是非常值得我们去细细品味的。</p></li><li><p>Redux </p><p>普遍的评价是，简单的项目不用上<code>Redux</code>。比较赞同这个观点。</p><p>而特别需要指出亮点的地方是，通过定义好的行为来约束数据变更，这个是非常高级的思想，在其他语言框架方面，其实比较早就有体现。这个建议大家不能停留在会用的阶段上，多去消化一下别人的思想。</p></li><li><p>Function Component</p><p>抛开性能方面，暂时没深入到 React 源码，也不好在这方面胡说八道。</p><p>除了耳熟能详的“推荐使用FC的理由”外，我认为更重要的，其实是编程范式、编程文化上的作用。</p><p>社区也是如此，大家先统一好文化与范式，然后在这条路上添砖加瓦，才是最好的生态，不必一直在争论孰是孰非。</p></li><li><p>React Hooks</p><p>已经肯定这个是一个天才工程师的神作。</p><p>都说一般的工程师做项目，超级工程司定义你怎么做。</p><p><code>React Hooks</code>也是一种风格上的发明创造，体现了一个内功深厚的工程司功底。</p><p>他们总是能发明一些，其他人只能“会用”的东西。</p></li></ul>\n\n<h4>2020年展望</h4>\n\n<ul><li>活着 ⭐️⭐️⭐️⭐️⭐️</li><li>学习 ⭐️⭐️⭐️⭐️⭐️</li><li>家庭 ⭐️⭐️⭐️⭐️⭐️</li></ul>\n\n<p><img alt=\"\" src=\"https://lanhaooss.oss-cn-shenzhen.aliyuncs.com/images/yaya.jpeg\"/></p>",
+  "desc":"咱们就不蹭热度，不谈疫情，这里只谈技术。突然多了一个“寒假”，爱学习的我还是安排了一些目标的。",
+  "createdAt": 1581739921,
+  "modified": 1581739921
+}

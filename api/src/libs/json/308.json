@@ -1,0 +1,13 @@
+{
+  "id": 308,
+  "title": "从一个页面开关, 说说有限状态机",
+  "keywords": [
+    "js",
+    "javascript",
+    "有限状态机"
+  ],
+  "content": "\n\n> \n故事起源于最近看一位朋友在实现一个 播放/暂停 按钮时, 一些思路上的碰撞,\n于是整理出本文, 讲解一下如何用 有限状态机 使代码更简洁可靠.\n\n![](http://bluestest.oss-cn-shanghai.aliyuncs.com/on_off.png)\n\n我们想实现上面这样的按钮交互, 先看看原版实现:\n\n```javascript\n$('#botton').on('click', function(){\n\tif ( $(this).text() === 'OFF' ){\n\t\t//把按钮的文案改变一下\n\t\t$(this).text('ON');\n\t\t//开始播放\n\t\t$('#player').start();\n\t} else {\n\t\t$(this).text('OFF');\n\t\t$('#player').stop();\n\t}\n});\n```\n\n这是一个基本的实现方式, 也是一个最简单的方式.\n\n不过,\n\n按照这个方式来做有几个不太优雅的地方:\n\n- 如果点击按钮之后, 需要做的操作增加, 会让`if / else`里面的代码越来越臃肿.\n- 如果按钮的变化不止 `on/off`两种, 我们可能需要些一堆 `else if`或者用`switch / case`\n\n#### 针对以上状况, 我提议试试使用**有限状态机** 来解决问题\n先看代码:\n\n```javascript\nvar fsm = (function(){\n\t//初始状态\n\tvar status = 1; \n\n\t//状态对应的操作\n\tvar mapping = {\n\t\t'1': {\n\t\t\ttext:'ON',\n\t\t\taction: $('#player').start\n\t\t},\n\t\t'-1': {\n\t\t\ttext:'OFF',\n\t\t\taction: $('#player').stop\n\t\t},\n\t};\n\n\treturn function(btn){\n\t\t//通过 *-1 实现status从 1/-1 切换\n\t\tstatus *= -1;\n\t\tbtn.text( mapping[status].text );\n\t\tvar fn = mapping[status].action;\n\t\tfn();\n\t}\n})();\n\n$('#botton').click(function(){\n\tfsm(this);\n});\n```\n\n阅读上面代码能发现, 对`botton`的点击事件处理, 只需要调用`fsm`函数即可, 内部的变化和操作, 都不需要暴露出来.\n\n`fsm`内部, 通过`mapping`来定义和限制行为, 唯一能够改变的只有`status`,\n\n这样的好处在于, 能够避免在编码过程中人为的错误, 因为事件响应部分只能有限的操作状态机的`status`,而不是直接参与`botton`的行为与表现.\n\n同时, 功能的扩展, 状态的增减, 都只需要在`mapping`里面定义好, 非常利于扩展与维护.\n",
+  "createdAt": 1516850982,
+  "modified": 1516850982,
+  "desc": "故事起源于最近看一位朋友在实现一个 播放/暂停 按钮时, 一些思路上的碰撞, 于是整理出本文, 讲解一下如何用 有限状态机 使代码更简洁可靠."
+}

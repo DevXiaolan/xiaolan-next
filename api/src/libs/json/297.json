@@ -1,0 +1,12 @@
+{
+  "id": "297",
+  "title": "一些笔记 , Elasticsearch",
+  "keywords": [
+    "elasticsearch",
+    "es"
+  ],
+  "content": "\n- 开始\n\n安装\n\n```javascript\n访问ES官方网站\nhttps://www.elastic.co/downloads/elasticsearch\n获取最新版，当前本班2.1.1 。\nES对运行环境唯一要求为JAVA 1.6以上，\n同样推荐官方最新版。（www.java.com）\n```\n\n配置\n\n```javascript\nES的配置文件  ./config/elasticsearch.yml\nnetwork.host: 0.0.0.0  #地址绑定\n\nindex.number_of_shards: 10 #默认主分片个数\nindex.number_of_replicas: 0 #默认从分片个数\n```\n\n启动\n\n```javascript\nES解压即用，\n./bin/elasticsearch -d \n\n-d 参数表示在后台运行，注意ES不允许使用root用户运行，\n所以你需要为ES专门分配用户，并且确保该用户对ES的数据\n目录、日志目录具有写入权限。\n默认数据目录在ES目录下的data\n```\n\n- 运行时\n\nhead插件\n\n```javascript\n安装方式参看\n./bin/plugin install mobz/elasticsearch-head\n\n访问地址：\nhttp://hostname:9200/_plugin/head\n\nhead插件可以查看集群概况，删除、关闭Indices，\n浏览数据，发送http请求操作数据等。\n上线时注意修改ES配置不能让外部网络访问。\n```\n\nkibana\n\n```javascript\n下载地址（最新4.x变化比较大，推荐）\nhttps://www.elastic.co/downloads/kibana\n\nkibana也是解压即可用，直接运行即可\nnohup ./bin/kibana &gt;log.txt &amp;\n(由于没有 －d 参数，要用nohup保持运行)\n```\n\nkibana－marvel\n\n```javascript\nmarvel是kibana的一个插件，是一个动态监控ES运行状态的工具，\n安装方式请看  \nhttps://www.elastic.co/downloads/marvel\n访问地址： \nhttp://hostname:5601/app/marvel\n```\n\n- 集群\n\n发现\n\n```javascript\nES配置文件默认集群名字是elasticsearch，在同一个局域网中，\n多个实例（不限主机）使用相同的集群名字，会自动发现并组成集群。\n2.0版本后，使用 multicast 自动发现的用户，需要单独安装:\nbin/plugin install discovery-multicast\n然后配置文件加上 \ndiscovery.zen.ping.multicast.enabled: true\n\nES也支持指定IP列表的集群，但灵活性和自动化不如上一种方式，\n所以在具备局域网组建条件的情况下推荐使用自动发现。\n```\n\n主从\n\n```javascript\n每个运行的ES实例，称为一个节点。\n当集群中运行了两个节点时（可以是单台主机上的两个节点），我们就\n实现了主从功能，后启动的节点会复制一份数据，意味着磁盘空间成倍增加。\n```\n\n![](https://raw.githubusercontent.com/looly/elasticsearch-definitive-guide-cn/master/images/elas_0203.png)\n\n第三个节点\n\n```javascript\n当有第三个节点介入时，ES集群会重新组织自己，重新分配数据分片。\n数据分片（shard）是Indices存储的逻辑空间，ES以分片为单位转移数据，如图：\n```\n\n![](https://raw.githubusercontent.com/looly/elasticsearch-definitive-guide-cn/master/images/elas_0204.png)\n\n```javascript\n这样，每个节点上维护的分片减少，整个集群的吞吐量和容量都得到提升。\n```\n\n***从节点会增加搜索速度，但是降低写入效率；\n而主节点能提高写入速度，轻微降低搜索速度，所以要权衡好数量** *\n\n- \nRESTFUL 接口\n\nES\n\n- 维护\n\n分片与节点\n\n```javascript\n对于目前的应用场景，单机情况下，建议开启10个shard，0个从节点\n\n索引方面，建议每天一个，kibana支持跨索引做局和图表，\n如：log-20160105,log-20160106\n```\n\n内存与磁盘\n\n```javascript\n通过rest接口，可以删除指定的index，按时间创建index以后尤其方便删除：\ncurl -x delete http://hostname:9200/log-20160105\n\n建议创建计划任务，每天固定时间删除一个月前的index\n```\n",
+  "createdAt": 1469612040,
+  "modified": 1469612971,
+  "desc": "访问ES官方网站 https://www.elastic.co/downloads/elasticsearch 获取最新版，当前本班2.1.1 。ES对运行环境唯一要求为JAVA 1.6以上，同样推荐官方最新版。"
+}

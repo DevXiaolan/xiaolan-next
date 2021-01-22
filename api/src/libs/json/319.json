@@ -1,0 +1,13 @@
+{
+  "id": 319,
+  "title": "使用 WaitGroup 做并发控制",
+  "keywords": [
+    "go",
+    "golang",
+    "waitgroup"
+  ],
+  "content": "#### 0x00 题目：一个常见的业务场景\n\n> \n通过气象台提供的天气接口，**并行** 地获取`北京`和`成都`的天气情况，返回一个无序列表。\n\n接口参考: `http://www.weather.com.cn/data/cityinfo/{城市编码}.html`\n\n北京 101010100    成都  101270101\n\n以上业务场景，属于比较常见的并行获取资源。\n\n多进程（线程）（协程）并行操作是基本操作，考核点在于如何让主线可以统筹控制各个支线。\n\n一般来说我们有3种常见结题思路：\n\n1. 全局共享的哨兵变量\n2. 利用`channel`做协程间的通信（模型类似事件监听）\n3. 通过高度封装的 `sync.WaitGroup`\n\n由于后续会专门出一篇关于`channel`的内容，本篇我们只讲述最简单的`sync.WaitGroup`\n#### =============== 敲黑板分界线 ================\n\n> \n此处只展示结构，完整代码请看 [这里](https://github.com/captainblue2013/pieces-of-code)\n\n```javascript\npackage main\n\nimport (\n\t\"encoding/json\"\n\t\"fmt\"\n\t\"io/ioutil\"\n\t\"net/http\"\n\t\"sync\"\n)\n\n/**\n *\n */\ntype WeatherBody struct {\n\tWeatherInfo `json:\"weatherinfo\"`\n}\n\ntype WeatherInfo struct {\n\t// 城市\n\tCity string `json:\"city\"`\n\t// 最低温度\n\tLow string `json:\"temp1\"`\n\t// 最高温度\n\tHigh string `json:\"temp2\"`\n}\n\n// 获取天气情况的函数\nfunc GetWeatherByCity(cityCode string) WeatherInfo {\n\tresp, err := http.Get(\"http://www.weather.com.cn/data/cityinfo/\" + cityCode + \".html\")\n\tif err != nil {\n\t\tpanic(err)\n\t}\n\tdefer resp.Body.Close()\n\n\tbody, _ := ioutil.ReadAll(resp.Body)\n\tweatherBody := WeatherBody{}\n\n\tjson.Unmarshal(body, &amp;weatherBody)\n\n\treturn weatherBody.WeatherInfo\n}\n\nfunc main() {\n\tresult := []WeatherInfo{}\n\t// 声明一个 waitGroup 并增加两个等待信号\n\tvar wg sync.WaitGroup\n\twg.Add(2)\n\n\t// 使用协程请求北京天气情况\n\tgo func() {\n\t\tweatherInfo := GetWeatherByCity(\"101010100\")\n\t\tresult = append(result, weatherInfo)\n\t\t// 告诉 wg 我已经完成任务\n\t\twg.Done()\n\t}()\n\n\t// 使用协程请求成都天气情况\n\tgo func() {\n\t\tweatherInfo := GetWeatherByCity(\"101270101\")\n\t\tresult = append(result, weatherInfo)\n\t\t// 告诉 wg 我已经完成任务\n\t\twg.Done()\n\t}()\n\n\twg.Wait()\n\tfmt.Printf(\"%+v\\n\", result)\n}\n\n/**\n知识点\n1. http模块的使用方式\n2. byte数组与 json 的转换\n3. WaitGroup 的 Add、Done、Wait方法的配合使用\n*/\n```\n#### 主要代码讲解\n1. 通过 `wg.Add(2)`设置两个信号量\n2. 在 `goroutine`里执行任务结束后，记得调用`wg.Done()`\n3. 在 **主协程** 里使用 `wg.Wait()`等待所有任务完成\n4. 打印结果\n\n#### 0x01 提问 &amp; 练手 环节\n1. 上述代码，如果把 `wg.Add(2)`改为 `wg.Add(1)`会是什么效果？\n2. 上述代码，如果把 `wg.Add(2)`改为 `wg.Add(3)`会是什么效果？\n3. 上述代码，如果去掉 `wg.Wait()`会是什么效果？\n\n",
+  "createdAt": 1559548981,
+  "modified": 1559548981,
+  "desc": "通过 wg.Add(2)设置两个信号量。在 goroutine 里执行任务结束后，记得调用wg.Done()。在 主协程 里使用 wg.Wait()等待所有任务完成"
+}

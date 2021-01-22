@@ -1,0 +1,13 @@
+{
+  "id": 320,
+  "title": "使用channel来做并发控制",
+  "keywords": [
+    "go",
+    "golang",
+    "channel"
+  ],
+  "content": "#### 0x00 还是同时拉取两个城市天气的问题\n\n> \n题目具体请参考上一篇 《[使用 WaitGroup 做并发控制](http://www.lanhao.name/article/319)》\n\n#### 0x01 这次我们直奔代码\n\n> \n此处只展示结构，完整代码请看 [这里](https://github.com/captainblue2013/pieces-of-code)\n\n```javascript\npackage main\n\nimport (\n\t\"encoding/json\"\n\t\"fmt\"\n\t\"io/ioutil\"\n\t\"net/http\"\n)\n\ntype WeatherBody struct {\n\tWeatherInfo `json:\"weatherinfo\"`\n}\n\ntype WeatherInfo struct {\n\t// 城市\n\tCity string `json:\"city\"`\n\t// 最低温度\n\tLow string `json:\"temp1\"`\n\t// 最高温度\n\tHigh string `json:\"temp2\"`\n}\n\n// 获取天气情况的函数\nfunc GetWeatherByCity(cityCode string) WeatherInfo {\n\tresp, err := http.Get(\"http://www.weather.com.cn/data/cityinfo/\" + cityCode + \".html\")\n\tif err != nil {\n\t\tpanic(err)\n\t}\n\tdefer resp.Body.Close()\n\n\tbody, _ := ioutil.ReadAll(resp.Body)\n\tweatherBody := WeatherBody{}\n\n\tjson.Unmarshal(body, &amp;weatherBody)\n\n\treturn weatherBody.WeatherInfo\n}\n\nfunc main() {\n\t// 待宰的羔羊\n\tcityIDS := []string{\"101010100\", \"101270101\"}\n\tresult := []WeatherInfo{}\n\t// 记录任务完成的计数器\n\ttaskCount := 0\n\t// 创建一个channal, 用了接受完成信号\n\ttaskChan := make(chan bool)\n\tfor _, cityID := range cityIDS {\n\t\t// 此处是不是很熟悉？\n\t\tid := cityID\n\t\tgo func(ch chan bool) {\n\t\t\tweatherInfo := GetWeatherByCity(id)\n\t\t\tresult = append(result, weatherInfo)\n\t\t\t// 当任务完成，向channel内发送一个信号\n\t\t\ttaskChan &lt;- true\n\t\t}(taskChan)\n\t}\n\n\tfor {\n\t\t// 在死循环种，这一步会阻塞，直到从channel中接收到数据\n\t\t&lt;-taskChan\n\t\t// 每次收到信号，计数器加一，直到计数器等于任务个数，跳出循环\n\t\ttaskCount++\n\t\tif taskCount == len(cityIDS) {\n\t\t\t// 全部完成\n\t\t\tfmt.Printf(\"%+v\\n\", result)\n\t\t\tbreak\n\t\t}\n\t}\n}\n```\n#### 主要代码讲解\n1. 通过计数器`taskCount`来记录完成任务的个数\n2. 通过**channel** `taskChan`来进行主线与支线的通信\n3. 在一个死循环里**阻塞** 代码，直到计数器值满足要求，跳出循环\n4. 打印结果\n\n#### 0x10 提问 &amp; 练手 环节\n1. \n改动上述代码，实现功能：\n\n> \n只把最先完成的任务结果打印出来\n\n2. \n进阶：尝试不使用 `result`这个变量，实现题目功能\n\n",
+  "createdAt": 1559573554,
+  "modified": 1559573554,
+  "desc": "通过计数器taskCount来记录完成任务的个数。通过channel taskChan来进行主线与支线的通信。在一个死循环里阻塞代码，直到计数器值满足要求，跳出循环"
+}

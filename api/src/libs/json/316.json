@@ -1,0 +1,12 @@
+{
+  "id": 316,
+  "title": "多条件短路优化实测",
+  "keywords": [
+    "javascript",
+    "优化"
+  ],
+  "content": "### 什么是多条件短路\n型如 **if (A &amp;&amp; B &amp;&amp; C)** 这样的多个条件组成的逻辑语句，\n\n通过调整每个因子的顺序，利用**短路** 来实现执行效率的优化。\n\n> \n[知乎：逻辑运算符特有的短路效应是什么](https://www.zhihu.com/question/39209736/answer/80208676)\n\n### 口说无凭，真实场景模拟测试\n首先定义三个逻辑单元：\n\n```javascript\nconst conditionA = ()=&gt;{\n  return Math.random() &gt; 0.25;\n}\n\nconst conditionB = ()=&gt;{\n  return Math.random() &gt; 0.5;\n}\n\nconst conditionC = ()=&gt;{\n  return Math.random() &gt; 0.75;\n}\n```\n\n显而易见， 以上三个逻辑， 返回 **true** 的概率是逐渐递减的。\n\n我们以此来做实验样本。\n\n```javascript\nconst Benchmark = require('benchmark');\nconst suite = new Benchmark.Suite;\n\nsuite.add('A || B || C', function () {\n  if(conditionA() || conditionB() || conditionC()){\n    // A或B或C， 大概率true的放前面\n  }\n}).add('C || B || A', function () {\n  if(conditionC() || conditionB() || conditionA()){\n    // C或B或A， 小概率true的放前面\n  }\n}).add('A &amp;&amp; B &amp;&amp; C', function () {\n  if(conditionA() &amp;&amp; conditionB() &amp;&amp; conditionC()){\n    // A且B且C, 大概率true的放前面\n  }\n}).add('C &amp;&amp; B &amp;&amp; A', function () {\n  if(conditionC() &amp;&amp; conditionB() &amp;&amp; conditionA()){\n    //C且B且A， 小概率true的放前面\n  }\n}).on('cycle', function (event) {\n  console.log(String(event.target));\n}).on('complete', function () {\n  console.log('Fastest is ' + this.filter('fastest').map('name'));\n}).run({ 'async': true });\n```\n\n以上代码应该比较好懂， 测试 `||``&amp;&amp;`两种情况下，不同的排列顺序对执行效率的影响，\n\n**如果实在思路转不过来， 多看几遍代码。** \n#### 结果：\n```javascript\nA || B || C x 29,734,965 ops/sec ±1.42% (88 runs sampled)\n\nC || B || A x 19,663,159 ops/sec ±0.57% (90 runs sampled)\n\nA &amp;&amp; B &amp;&amp; C x 19,865,675 ops/sec ±0.63% (89 runs sampled)\n\nC &amp;&amp; B &amp;&amp; A x 30,679,108 ops/sec ±0.52% (88 runs sampled)\n```\n\n**结论：** \n\n- 多个 **||** 条件，把大概率**true** 的条件写最前面，效率更高。\n- 多个 **&amp;&amp;** 条件，把小概率**true** 的条件写最前面，效率更高。\n\n#### 为什么？\n**||** 遇到**true** 就会短路， 反之， **&amp;&amp;** 遇到**false** 也会短路。\n\n明白了吗？\n\n> \n完整代码：将上面两段合在一起就是。\n\n",
+  "createdAt": 1520585160,
+  "modified": 1520586254,
+  "desc": "什么是多条件短路?型如 if (A && B && C) 这样的多个条件组成的逻辑语句，通过调整每个因子的顺序，利用短路来实现执行效率的优化。"
+}

@@ -1,0 +1,13 @@
+{
+  "id": "298",
+  "title": "PHP pdo 事务，代码里的一个容易踩的坑",
+  "keywords": [
+    "php",
+    "pdo",
+    "事务"
+  ],
+  "content": "\nPHP pdo 在支持事务的存储引擎(innoDB)下,可以使用以下代码实现事务\n\n```javascript\n$pdo-&gt;beginTransaction();\n\ntry{\n    $pdo-&gt;exec('insert into tt set s=11,t=99 ');\n    $pdo-&gt;commit();\n    // 注意！！\n}catch (Exception $e){\n    var_dump($e);\n    $pdo-&gt;rollback();\n}\n```\n\n上面的逻辑，在数据库插入失败时，会执行`rollback`，本次事务结束。\n\n表面上看这段代码没有问题，\n\n但是，如果你在上面【注意】的地方，还有其他代码的话。比如：\n\n```javascript\n$pdo-&gt;beginTransaction();\n\ntry{\n    $pdo-&gt;exec('insert into tt set s=11,t=99 ');\n    $pdo-&gt;commit();\n    // 注意！！\n    throw new Exception('boom');\n}catch (Exception $e){\n    var_dump($e);\n    $pdo-&gt;rollback();\n}\n```\n\n这样一来，数据库插入没有问题，顺利`commit`，但是catch到了一个其他的异常，\n\n导致`rollback`也被执行了一次，这时候 `pdo`会报一个错误\n\n```javascript\nUncaught PDOException: There is no active transaction in ...\n```\n\n这是因为 `beginTransaction`会让这个事务状态为 `active`,\n\n而 `commit`或 `rollback`会让事务变成 `inactive`。\n\n显而易见，当然不能执行了 `commit`后又执行 `rollback`了。\n### 所以， commit 应该写在 try 语句块的最后一行。",
+  "createdAt": 1470300483,
+  "modified": 1470300483,
+  "desc": "beginTransaction 会让事务状态为 active, 而 commit 或 rollback 会让事务变成 inactive 。s显而易见，当然不能执行了 commit 后又执行 rollback 了。"
+}
