@@ -1,7 +1,7 @@
 npm run build
 
-docker build -t xiaolanhome_web:210125 .
+docker build -t xiaolanhome_web:210312 .
 
-docker tag xiaolanhome_web:210125 registry.cn-shenzhen.aliyuncs.com/lan_jane/xiaolanhome_web:210125
+docker tag xiaolanhome_web:210312 registry.cn-shenzhen.aliyuncs.com/lan_jane/xiaolanhome_web:210312
 
-docker push registry.cn-shenzhen.aliyuncs.com/lan_jane/xiaolanhome_web:210125
+docker push registry.cn-shenzhen.aliyuncs.com/lan_jane/xiaolanhome_web:210312

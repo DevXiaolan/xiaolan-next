@@ -25,6 +25,7 @@ export default () => {
   useEffect(() => {
     getArticle(+id).then(data => {
       setTimeout(() => {
+        document.title = data.title;
         setArticle(data);
         toggleLoading(false);
         const gitalk = new Gitalk({
@@ -60,7 +61,7 @@ export default () => {
 
   return (
     <div className={styles.article}>
-      <Header title={article?.title} hideSearch={true} />
+      <Header title={title} hideSearch={true} />
       <p>
         <span>{dayjs(time * 1000).format('MMMM DD, YYYY')}</span>
         {tags.map((tag: string) => {
